@@ -2,13 +2,14 @@ package ratelimit
 
 import (
 	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
 	"github.com/gin-gonic/gin"
 )
 
-// RateLimit ratelimit, max qps
-func RateLimit(max float64) gin.HandlerFunc {
+// RateLimit ratelimit, lmt
+func RateLimit(lmt *limiter.Limiter) gin.HandlerFunc {
 
-	lmt := tollbooth.NewLimiter(max, nil)
+	lmt.SetMessage("You have reached maximum request limit.")
 
 	return func(c *gin.Context) {
 		httpError := tollbooth.LimitByRequest(lmt, c.Writer, c.Request)
